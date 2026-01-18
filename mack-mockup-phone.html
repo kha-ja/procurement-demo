@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mack Procurement Agent - Mobile Flow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gmail-red: #EA4335;
+      --gmail-blue: #1A73E8;
+      --gmail-green: #34A853;
+      --gmail-yellow: #FBBC04;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F6F8FC;
+      --bg-hover: #F1F3F4;
+      --text-primary: #202124;
+      --text-secondary: #5F6368;
+      --text-tertiary: #9AA0A6;
+      --border-light: #E8EAED;
+      --shadow-sm: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px rgba(60,64,67,0.15);
+      --shadow-md: 0 1px 3px rgba(60,64,67,0.3), 0 4px 8px rgba(60,64,67,0.15);
+      --shadow-lg: 0 4px 8px rgba(60,64,67,0.3), 0 8px 16px rgba(60,64,67,0.15);
+      
+      /* Console colors */
+      --console-bg: #0d1117;
+      --console-surface: #161b22;
+      --console-border: #30363d;
+      --console-text: #c9d1d9;
+      --console-muted: #8b949e;
+      --console-green: #3fb950;
+      --console-yellow: #d29922;
+      --console-blue: #58a6ff;
+      --console-purple: #bc8cff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #E8EAED;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+    }
+
+    /* Page header */
+    .page-header {
+      text-align: center;
+      margin-bottom: 16px;
+      max-width: 375px;
+    }
+
+    .page-header h1 {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .page-header p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Chapter navigation */
+    .chapter-nav {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      max-width: 375px;
+      overflow-x: auto;
+      padding: 4px 0;
+      scrollbar-width: none;
+    }
+
+    .chapter-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chapter-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .chapter-dot:hover {
+      border-color: var(--gmail-blue);
+      color: var(--gmail-blue);
+    }
+
+    .chapter-dot.active {
+      background: var(--gmail-blue);
+      border-color: var(--gmail-blue);
+      color: white;
+    }
+
+    .chapter-dot.completed {
+      background: var(--gmail-green);
+      border-color: var(--gmail-green);
+      color: white;
+    }
+
+    /* Chapter info pill */
+    .chapter-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border-radius: 20px;
+      margin: 0 auto 12px;
+      max-width: fit-content;
+    }
+
+    .chapter-info-date {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gmail-blue);
+    }
+
+    .chapter-info-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* View toggle tabs - outside phone */
+    .view-tabs {
+      display: flex;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 4px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      max-width: 375px;
+      width: 100%;
+    }
+
+    .view-tab {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      background: none;
+      border-radius: 6px;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .view-tab:hover {
+      color: var(--text-primary);
+    }
+
+    .view-tab.active {
+      background: var(--gmail-blue);
+      color: white;
+    }
+
+    .view-tab-icon {
+      font-size: 16px;
+    }
+
+    /* Main content area */
+    .main-content {
+      width: 375px;
+    }
+
+    /* Phone frame */
+    .phone-frame {
+      width: 375px;
+      height: 700px;
+      background: var(--bg-primary);
+      border-radius: 40px;
+      box-shadow: var(--shadow-lg), 0 0 0 12px #1a1a1a;
+      overflow: hidden;
+      position: relative;
+      display: none;
+    }
+
+    .phone-frame.active {
+      display: block;
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 44px;
+      background: var(--bg-primary);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 24px 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .status-bar-time {
+      color: var(--text-primary);
+    }
+
+    .status-bar-icons {
+      display: flex;
+      gap: 4px;
+      color: var(--text-primary);
+      font-size: 12px;
+    }
+
+    /* Screen container */
+    .screen {
+      height: calc(100% - 44px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* View states */
+    .view {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      flex-direction: column;
+      background: var(--bg-primary);
+    }
+
+    .view.active {
+      display: flex;
+    }
+
+    /* Gmail compose header */
+    .compose-header {
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-bottom: 1px solid var(--border-light);
+      background: var(--bg-primary);
+    }
+
+    .compose-header-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .compose-header-title {
+      flex: 1;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 18px;
+      color: var(--text-primary);
+      margin-left: 8px;
+    }
+
+    .compose-send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: var(--gmail-blue);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .compose-send-btn:hover {
+      background: rgba(26, 115, 232, 0.1);
+    }
+
+    /* Compose form */
+    .compose-form {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .compose-field {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-light);
+      gap: 8px;
+    }
+
+    .compose-label {
+      font-size: 15px;
+      color: var(--text-secondary);
+      min-width: 50px;
+    }
+
+    .compose-value {
+      flex: 1;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .compose-subject {
+      font-size: 15px;
+      color: var(--text-primary);
+      flex: 1;
+    }
+
+    .compose-body {
+      padding: 16px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+    }
+
+    .compose-attachments {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .compose-attachment {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+
+    .attachment-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .attachment-icon.pdf { background: var(--gmail-red); }
+    .attachment-icon.xlsx { background: var(--gmail-green); }
+
+    .attachment-info { flex: 1; }
+
+    .attachment-name {
+      font-size: 14px;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .attachment-size {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* Thread header */
+    .thread-header {
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .thread-header-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .thread-header-actions {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Thread content */
+    .thread-content {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg-primary);
+    }
+
+    .thread-subject {
+      padding: 16px 16px 8px;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .thread-label {
+      display: inline-block;
+      margin-left: 16px;
+      margin-bottom: 12px;
+      padding: 2px 8px;
+      background: var(--bg-secondary);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    /* Email message */
+    .email-message {
+      border-bottom: 1px solid var(--border-light);
+      padding: 16px;
+    }
+
+    .email-message:last-child {
+      border-bottom: none;
+    }
+
+    .email-message-header {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .email-avatar-large {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .email-avatar-large.user { background: #7C4DFF; color: white; }
+    .email-avatar-large.agent { background: var(--gmail-blue); color: white; }
+    .email-avatar-large.vendor { background: var(--text-secondary); color: white; }
+
+    .email-message-meta { flex: 1; min-width: 0; }
+
+    .email-from-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+      flex-wrap: wrap;
+    }
+
+    .email-from-name {
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .email-agent-badge {
+      padding: 1px 6px;
+      background: var(--gmail-blue);
+      color: white;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .email-to-row {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .email-time {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .email-body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+    }
+
+    .email-signature {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+    }
+
+    .email-attachments-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .email-attachment-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--text-primary);
+    }
+
+    .email-attachment-chip-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 700;
+      color: white;
+    }
+
+    /* Email table */
+    .email-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 12px;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .email-table th {
+      background: var(--bg-secondary);
+      padding: 8px;
+      text-align: left;
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .email-table td {
+      padding: 8px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-primary);
+    }
+
+    .email-table tr:last-child td { border-bottom: none; }
+    .email-table .total-row { background: var(--bg-secondary); font-weight: 500; }
+
+    /* Badges */
+    .warning-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      background: #FCE8E6;
+      color: #C5221F;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .success-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      background: #E6F4EA;
+      color: #137333;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    /* Snackbar */
+    .snackbar {
+      position: absolute;
+      bottom: 24px;
+      left: 16px;
+      right: 16px;
+      background: var(--text-primary);
+      color: white;
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-lg);
+      z-index: 200;
+    }
+
+    .snackbar.show {
+      display: flex;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .snackbar-action {
+      color: #8AB4F8;
+      background: none;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* ========== CONSOLE / BACKSTAGE ========== */
+    .console-container {
+      width: 375px;
+      display: none;
+    }
+
+    .console-container.active {
+      display: block;
+    }
+
+    .console-header {
+      background: var(--console-surface);
+      border: 1px solid var(--console-border);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .console-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .console-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--console-border);
+    }
+
+    .console-dot.red { background: #ff5f56; }
+    .console-dot.yellow { background: #ffbd2e; }
+    .console-dot.green { background: #27ca40; }
+
+    .console-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--console-muted);
+      flex: 1;
+      text-align: center;
+    }
+
+    .console-body {
+      background: var(--console-bg);
+      border: 1px solid var(--console-border);
+      border-radius: 0 0 8px 8px;
+      padding: 16px;
+      min-height: 500px;
+      max-height: 600px;
+      overflow-y: auto;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .console-section {
+      margin-bottom: 20px;
+    }
+
+    .console-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .console-section-header {
+      color: var(--console-muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--console-border);
+    }
+
+    .console-log {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .log-line {
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .log-timestamp {
+      color: var(--console-muted);
+      font-size: 10px;
+      min-width: 45px;
+      flex-shrink: 0;
+    }
+
+    .log-prefix {
+      flex-shrink: 0;
+      font-size: 11px;
+    }
+
+    .log-prefix.info { color: var(--console-blue); }
+    .log-prefix.success { color: var(--console-green); }
+    .log-prefix.warning { color: var(--console-yellow); }
+    .log-prefix.action { color: var(--console-purple); }
+
+    .log-message {
+      color: var(--console-text);
+      flex: 1;
+    }
+
+    .log-message strong {
+      color: #fff;
+    }
+
+    .log-details {
+      margin-top: 4px;
+      padding-left: 16px;
+      color: var(--console-muted);
+      font-size: 11px;
+    }
+
+    .log-details li {
+      list-style: none;
+      margin-bottom: 2px;
+    }
+
+    .log-details li::before {
+      content: "";
+      color: var(--console-border);
+    }
+
+    .log-details .success { color: var(--console-green); }
+    .log-details .warning { color: var(--console-yellow); }
+
+    .console-note {
+      background: var(--console-surface);
+      border: 1px dashed var(--console-border);
+      border-radius: 4px;
+      padding: 12px;
+      margin-top: 16px;
+      font-size: 11px;
+      color: var(--console-muted);
+      line-height: 1.5;
+    }
+
+    .console-note strong {
+      color: var(--console-text);
+    }
+
+    /* Navigation footer */
+    .nav-footer {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      max-width: 375px;
+      width: 100%;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: var(--bg-secondary);
+      border-color: var(--gmail-blue);
+      color: var(--gmail-blue);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .nav-btn:disabled:hover {
+      background: var(--bg-primary);
+      border-color: var(--border-light);
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h1>Mack Procurement Agent</h1>
+    <p>Coventry Lane Project - Sunrise Homes</p>
+  </div>
+
+  <!-- Chapter dots -->
+  <div class="chapter-nav">
+    <div class="chapter-dot active" data-chapter="1">1</div>
+    <div class="chapter-dot" data-chapter="2">2</div>
+    <div class="chapter-dot" data-chapter="3">3</div>
+    <div class="chapter-dot" data-chapter="4">4</div>
+    <div class="chapter-dot" data-chapter="5">5</div>
+    <div class="chapter-dot" data-chapter="6">6</div>
+    <div class="chapter-dot" data-chapter="7">7</div>
+    <div class="chapter-dot" data-chapter="8">8</div>
+  </div>
+
+  <!-- Chapter info -->
+  <div class="chapter-info">
+    <span class="chapter-info-date" id="chapterDate">Feb 20</span>
+    <span class="chapter-info-desc" id="chapterDesc">Initial Request</span>
+  </div>
+
+  <!-- View toggle tabs -->
+  <div class="view-tabs">
+    <button class="view-tab active" id="tabInbox">
+      <span class="view-tab-icon">&#9993;</span>
+      Dana's Inbox
+    </button>
+    <button class="view-tab" id="tabConsole">
+      <span class="view-tab-icon">&#9881;</span>
+      Background Activity
+    </button>
+  </div>
+
+  <!-- Main content area -->
+  <div class="main-content">
+    
+    <!-- ==================== PHONE FRAME ==================== -->
+    <div class="phone-frame active" id="phoneFrame">
+      <div class="status-bar">
+        <span class="status-bar-time">9:14</span>
+        <span class="status-bar-icons"></span>
+      </div>
+
+      <div class="screen">
+        <!-- Chapter 1: Compose -->
+        <div class="view active" id="ch1-compose">
+          <div class="compose-header">
+            <button class="compose-header-btn">&times;</button>
+            <span class="compose-header-title">Compose</span>
+            <button class="compose-header-btn">&#128206;</button>
+            <button class="compose-header-btn">&#8942;</button>
+            <button class="compose-send-btn" id="sendBtn">&#10148;</button>
+          </div>
+          <div class="compose-form">
+            <div class="compose-field">
+              <span class="compose-label">From</span>
+              <span class="compose-value">dana@sunrisehomes.com</span>
+            </div>
+            <div class="compose-field">
+              <span class="compose-label">To</span>
+              <span class="compose-value">mack@procurement.ai</span>
+            </div>
+            <div class="compose-field">
+              <span class="compose-subject">New project - 42 Coventry Lane, Windham NH</span>
+            </div>
+            <div class="compose-body">Hey Mack,
+
+Got the final plans for our Coventry Lane build. Single family, 2,400 sq ft, standard foundation with 2-car garage.
+
+Specs and materials list attached. Ground breaks March 15th, so I need foundation and framing materials delivered by March 10th.
+
+Let me know what you find.
+
+Dana
+Sunrise Homes</div>
+            <div class="compose-attachments">
+              <div class="compose-attachment">
+                <div class="attachment-icon pdf">PDF</div>
+                <div class="attachment-info">
+                  <div class="attachment-name">Coventry_Lane_Plans.pdf</div>
+                  <div class="attachment-size">2.4 MB</div>
+                </div>
+              </div>
+              <div class="compose-attachment">
+                <div class="attachment-icon xlsx">XLS</div>
+                <div class="attachment-info">
+                  <div class="attachment-name">Materials_List.xlsx</div>
+                  <div class="attachment-size">84 KB</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="snackbar" id="sentSnackbar">
+            <span>Message sent</span>
+            <button class="snackbar-action" id="viewActivityBtn">View activity</button>
+          </div>
+        </div>
+
+        <!-- Chapter 2: Thread with response -->
+        <div class="view" id="ch2-thread">
+          <div class="thread-header">
+            <button class="thread-header-btn">&#8592;</button>
+            <div class="thread-header-actions">
+              <button class="thread-header-btn">&#128465;</button>
+              <button class="thread-header-btn">&#9993;</button>
+              <button class="thread-header-btn">&#8942;</button>
+            </div>
+          </div>
+          <div class="thread-content">
+            <div class="thread-subject">New project - 42 Coventry Lane, Windham NH</div>
+            <span class="thread-label">Inbox</span>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large user">D</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Dana</span>
+                  </div>
+                  <div class="email-to-row">to mack</div>
+                </div>
+                <span class="email-time">9:14 AM</span>
+              </div>
+              <div class="email-body">Hey Mack,
+
+Got the final plans for our Coventry Lane build. Single family, 2,400 sq ft, standard foundation with 2-car garage.
+
+Specs and materials list attached. Ground breaks March 15th, so I need foundation and framing materials delivered by March 10th.
+
+Let me know what you find.</div>
+              <div class="email-signature">Dana
+Sunrise Homes</div>
+              <div class="email-attachments-inline">
+                <div class="email-attachment-chip">
+                  <div class="email-attachment-chip-icon" style="background: #EA4335;">PDF</div>
+                  <span>Plans.pdf</span>
+                </div>
+                <div class="email-attachment-chip">
+                  <div class="email-attachment-chip-icon" style="background: #34A853;">XLS</div>
+                  <span>Materials.xlsx</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large agent">M</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Mack</span>
+                    <span class="email-agent-badge">Agent</span>
+                  </div>
+                  <div class="email-to-row">to dana</div>
+                </div>
+                <span class="email-time">9:22 AM</span>
+              </div>
+              <div class="email-body">Got it. I pulled 127 items from your materials list across foundation, framing, and rough openings.
+
+I'm reaching out to vendors in the southern NH / northern MA area now. I'll have quotes back within a few days.
+
+- Mack</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter 3: Vendor quotes -->
+        <div class="view" id="ch3-thread">
+          <div class="thread-header">
+            <button class="thread-header-btn">&#8592;</button>
+            <div class="thread-header-actions">
+              <button class="thread-header-btn">&#128465;</button>
+              <button class="thread-header-btn">&#9993;</button>
+              <button class="thread-header-btn">&#8942;</button>
+            </div>
+          </div>
+          <div class="thread-content">
+            <div class="thread-subject">Quote Request - Foundation Materials</div>
+            <span class="thread-label">Inbox</span>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large vendor">F</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Mike Torres</span>
+                  </div>
+                  <div class="email-to-row">to mack, cc: dana</div>
+                </div>
+                <span class="email-time">Feb 21</span>
+              </div>
+              <div class="email-body">Mack,
+
+Here's what we can do for the Coventry Lane foundation:
+
+- 28 yards concrete (4000 PSI): $4,480
+- Rebar (#4 and #5): $1,240
+- Anchor bolts + hardware: $380
+- Form rental (2 weeks): $600
+
+Total: $6,700
+Delivery: $275 (includes pump truck)
+
+We could deliver as early as March 3rd.</div>
+              <div class="email-signature">Mike Torres
+Footing First Supply</div>
+            </div>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large vendor">G</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Rich</span>
+                  </div>
+                  <div class="email-to-row">to mack, cc: dana</div>
+                </div>
+                <span class="email-time">Feb 21</span>
+              </div>
+              <div class="email-body">Thanks for reaching out. We can handle the full framing package.
+
+Framing lumber + sheathing + house wrap: $38,400
+Delivery to Windham: $350
+Lead time: 5 business days</div>
+              <div class="email-signature">Rich
+Granite Grove Lumber</div>
+            </div>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large vendor">P</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Pinnacle Pine</span>
+                    <span class="warning-badge">! Backorder</span>
+                  </div>
+                  <div class="email-to-row">to mack, cc: dana</div>
+                </div>
+                <span class="email-time">Feb 22</span>
+              </div>
+              <div class="email-body">Summary:
+- Framing lumber: $34,200
+- OSB sheathing: $6,800
+- Tyvek house wrap: $890
+
+Subtotal: $41,890
+Delivery: $400 (2 trips)
+
+Note: Backordered on 2x12x16 LVL beams. Earliest: March 18th.</div>
+            </div>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large vendor">P</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Pane & Panel Co.</span>
+                  </div>
+                  <div class="email-to-row">to mack, cc: dana</div>
+                </div>
+                <span class="email-time">Feb 23</span>
+              </div>
+              <div class="email-body">Quote for Coventry Lane windows:
+
+12 x Double-hung vinyl windows:
+- Standard double-pane: $6,840
+- Upgrade triple-pane: $9,120
+
+3 x Exterior doors: $2,890
+
+Lead time: 10 business days</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter 4: Negotiation -->
+        <div class="view" id="ch4-thread">
+          <div class="thread-header">
+            <button class="thread-header-btn">&#8592;</button>
+            <div class="thread-header-actions">
+              <button class="thread-header-btn">&#128465;</button>
+              <button class="thread-header-btn">&#9993;</button>
+              <button class="thread-header-btn">&#8942;</button>
+            </div>
+          </div>
+          <div class="thread-content">
+            <div class="thread-subject">RE: Quote - Coventry Lane</div>
+            <span class="thread-label">Sent</span>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large agent">M</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Mack</span>
+                    <span class="email-agent-badge">Agent</span>
+                  </div>
+                  <div class="email-to-row">to quotes@granitegrove.com</div>
+                </div>
+                <span class="email-time">Feb 25</span>
+              </div>
+              <div class="email-body">Rich,
+
+Thanks for the quote. The pricing looks good, but I'm seeing free delivery from another supplier in the area.
+
+Can you match free delivery? Sunrise Homes does 4-5 builds per year in southern NH and we'd like to establish an ongoing relationship.
+
+- Mack</div>
+            </div>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large vendor">G</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Rich</span>
+                    <span class="success-badge">OK Negotiation Won</span>
+                  </div>
+                  <div class="email-to-row">to mack, cc: dana</div>
+                </div>
+                <span class="email-time">Feb 26</span>
+              </div>
+              <div class="email-body">Mack,
+
+I can do free delivery on orders over $35k, so you're good. I'll also set up Sunrise Homes with a contractor account - that gets you net-30 terms.
+
+Updated quote:
+Framing package: $38,400
+Delivery: $0
+
+Let me know when you want to confirm.</div>
+              <div class="email-signature">Rich
+Granite Grove Lumber</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter 5: Recommendation -->
+        <div class="view" id="ch5-thread">
+          <div class="thread-header">
+            <button class="thread-header-btn">&#8592;</button>
+            <div class="thread-header-actions">
+              <button class="thread-header-btn">&#128465;</button>
+              <button class="thread-header-btn">&#9993;</button>
+              <button class="thread-header-btn">&#8942;</button>
+            </div>
+          </div>
+          <div class="thread-content">
+            <div class="thread-subject">Coventry Lane - Vendor Recommendation</div>
+            <span class="thread-label">Inbox</span>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large agent">M</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Mack</span>
+                    <span class="email-agent-badge">Agent</span>
+                  </div>
+                  <div class="email-to-row">to dana</div>
+                </div>
+                <span class="email-time">Feb 27</span>
+              </div>
+              <div class="email-body">Dana,
+
+I got quotes from 8 vendors. Here's my recommendation for the March 10th delivery:</div>
+
+              <table class="email-table">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Vendor</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Foundation</td>
+                    <td>Footing First</td>
+                    <td>$6,975</td>
+                  </tr>
+                  <tr>
+                    <td>Framing</td>
+                    <td>Granite Grove</td>
+                    <td>$38,400</td>
+                  </tr>
+                  <tr>
+                    <td>Windows</td>
+                    <td>Pane & Panel</td>
+                    <td>$9,730</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td colspan="2"><strong>TOTAL</strong></td>
+                    <td><strong>$55,105</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="email-body" style="padding-top: 0;">All three can meet your deadline.
+
+<span style="color: #34A853; font-weight: 500;">~$4,200 savings vs alternatives</span>
+
+Let me know if you want to proceed.
+
+- Mack</div>
+              <div class="email-attachments-inline">
+                <div class="email-attachment-chip">
+                  <div class="email-attachment-chip-icon" style="background: #34A853;">XLS</div>
+                  <span>Vendor_Comparison.xlsx</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter 6: Approval -->
+        <div class="view" id="ch6-thread">
+          <div class="thread-header">
+            <button class="thread-header-btn">&#8592;</button>
+            <div class="thread-header-actions">
+              <button class="thread-header-btn">&#128465;</button>
+              <button class="thread-header-btn">&#9993;</button>
+              <button class="thread-header-btn">&#8942;</button>
+            </div>
+          </div>
+          <div class="thread-content">
+            <div class="thread-subject">RE: Vendor Recommendation</div>
+            <span class="thread-label">Inbox</span>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large user">D</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Dana</span>
+                  </div>
+                  <div class="email-to-row">to mack</div>
+                </div>
+                <span class="email-time">10:45 AM</span>
+              </div>
+              <div class="email-body">Looks good. Go ahead and confirm all three.
+
+Dana</div>
+            </div>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large agent">M</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Mack</span>
+                    <span class="email-agent-badge">Agent</span>
+                  </div>
+                  <div class="email-to-row">to mike@footingfirst.com</div>
+                </div>
+                <span class="email-time">10:52 AM</span>
+              </div>
+              <div class="email-body">Mike,
+
+We'd like to proceed with the foundation order:
+
+- Delivery: 42 Coventry Lane, Windham, NH
+- Date: March 3rd
+- Total: $6,975
+
+Invoice to dana@sunrisehomes.com.
+
+- Mack</div>
+            </div>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large agent">M</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Mack</span>
+                    <span class="email-agent-badge">Agent</span>
+                  </div>
+                  <div class="email-to-row">to quotes@granitegrove.com</div>
+                </div>
+                <span class="email-time">10:53 AM</span>
+              </div>
+              <div class="email-body">Rich,
+
+Let's lock in the framing order:
+
+- Delivery: 42 Coventry Lane, Windham, NH
+- Date: March 6th
+- Total: $38,400 (free delivery)
+
+- Mack</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter 7: Confirmed -->
+        <div class="view" id="ch7-thread">
+          <div class="thread-header">
+            <button class="thread-header-btn">&#8592;</button>
+            <div class="thread-header-actions">
+              <button class="thread-header-btn">&#128465;</button>
+              <button class="thread-header-btn">&#9993;</button>
+              <button class="thread-header-btn">&#8942;</button>
+            </div>
+          </div>
+          <div class="thread-content">
+            <div class="thread-subject">Coventry Lane - All Orders Confirmed</div>
+            <span class="thread-label">Inbox</span>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large vendor">F</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Mike Torres</span>
+                  </div>
+                  <div class="email-to-row">to mack, cc: dana</div>
+                </div>
+                <span class="email-time">8:30 AM</span>
+              </div>
+              <div class="email-body">Order confirmed. Invoice attached.
+
+Delivery: Monday, March 3rd (8am-12pm)
+Site contact needed for pour coordination.</div>
+              <div class="email-signature">Mike Torres
+Footing First Supply</div>
+              <div class="email-attachments-inline">
+                <div class="email-attachment-chip">
+                  <div class="email-attachment-chip-icon" style="background: #EA4335;">PDF</div>
+                  <span>Invoice_FF-0892.pdf</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large agent">M</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Mack</span>
+                    <span class="email-agent-badge">Agent</span>
+                  </div>
+                  <div class="email-to-row">to dana</div>
+                </div>
+                <span class="email-time">11:15 AM</span>
+              </div>
+              <div class="email-body">Dana,
+
+All three orders are confirmed:</div>
+
+              <table class="email-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Vendor</th>
+                    <th>Invoice</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Mar 3</strong></td>
+                    <td>Footing First</td>
+                    <td>$6,975</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mar 6</strong></td>
+                    <td>Granite Grove</td>
+                    <td>$38,400</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mar 8</strong></td>
+                    <td>Pane & Panel</td>
+                    <td>$9,730</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td colspan="2"><strong>TOTAL</strong></td>
+                    <td><strong>$55,105</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="email-body" style="padding-top: 0;">Invoices attached.
+
+- Mack</div>
+              <div class="email-attachments-inline">
+                <div class="email-attachment-chip">
+                  <div class="email-attachment-chip-icon" style="background: #EA4335;">PDF</div>
+                  <span>FF-0892.pdf</span>
+                </div>
+                <div class="email-attachment-chip">
+                  <div class="email-attachment-chip-icon" style="background: #EA4335;">PDF</div>
+                  <span>GG-41205.pdf</span>
+                </div>
+                <div class="email-attachment-chip">
+                  <div class="email-attachment-chip-icon" style="background: #EA4335;">PDF</div>
+                  <span>PP-8847.pdf</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter 8: Scope Change -->
+        <div class="view" id="ch8-thread">
+          <div class="thread-header">
+            <button class="thread-header-btn">&#8592;</button>
+            <div class="thread-header-actions">
+              <button class="thread-header-btn">&#128465;</button>
+              <button class="thread-header-btn">&#9993;</button>
+              <button class="thread-header-btn">&#8942;</button>
+            </div>
+          </div>
+          <div class="thread-content">
+            <div class="thread-subject">Coventry Lane - Sunroom Addition</div>
+            <span class="thread-label">Inbox</span>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large user">D</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Dana</span>
+                  </div>
+                  <div class="email-to-row">to mack</div>
+                </div>
+                <span class="email-time">9:30 AM</span>
+              </div>
+              <div class="email-body">Mack,
+
+Client just approved an addition - 12x16 sunroom off the back.
+
+Going to need:
+- Additional framing lumber
+- 6 more windows (casement)
+- Extra sheathing and wrap
+
+Can you check with Granite Grove and Pane & Panel? Need delivery by March 20th.
+
+Dana</div>
+            </div>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large agent">M</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Mack</span>
+                    <span class="email-agent-badge">Agent</span>
+                  </div>
+                  <div class="email-to-row">to dana</div>
+                </div>
+                <span class="email-time">Mar 16, 3:00 PM</span>
+              </div>
+              <div class="email-body">Dana,
+
+Got quotes from both vendors:</div>
+
+              <table class="email-table">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Vendor</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Framing</td>
+                    <td>Granite Grove</td>
+                    <td>$2,600</td>
+                  </tr>
+                  <tr>
+                    <td>Windows (std)</td>
+                    <td>Pane & Panel</td>
+                    <td>$3,240</td>
+                  </tr>
+                  <tr>
+                    <td>Windows (triple)</td>
+                    <td>Pane & Panel</td>
+                    <td>$4,380</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="email-body" style="padding-top: 0;">For a sunroom, I'd lean toward triple-pane - better insulation for that much glass.
+
+Both can deliver by March 18-20.
+
+- Mack</div>
+            </div>
+
+            <div class="email-message">
+              <div class="email-message-header">
+                <div class="email-avatar-large user">D</div>
+                <div class="email-message-meta">
+                  <div class="email-from-row">
+                    <span class="email-from-name">Dana</span>
+                  </div>
+                  <div class="email-to-row">to mack</div>
+                </div>
+                <span class="email-time">3:15 PM</span>
+              </div>
+              <div class="email-body">Good call on the triple-pane. Confirm both orders.
+
+Dana</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== CONSOLE VIEW ==================== -->
+    <div class="console-container" id="consoleContainer">
+      <div class="console-header">
+        <div class="console-dots">
+          <div class="console-dot red"></div>
+          <div class="console-dot yellow"></div>
+          <div class="console-dot green"></div>
+        </div>
+        <div class="console-title">mack-agent - background activity</div>
+      </div>
+      <div class="console-body" id="consoleBody">
+        <!-- Content populated by JS -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Navigation footer -->
+  <div class="nav-footer">
+    <button class="nav-btn" id="prevBtn" disabled>&#8592; Previous</button>
+    <button class="nav-btn" id="nextBtn">Next →</button>
+  </div>
+
+  <script>
+    // State
+    let currentChapter = 1;
+    let currentViewTab = 'inbox'; // 'inbox' or 'console'
+    let emailSent = false;
+
+    // Chapter metadata
+    const chapters = {
+      1: { date: 'Feb 20', desc: 'Initial Request' },
+      2: { date: 'Feb 20', desc: 'Research Begins' },
+      3: { date: 'Feb 21-24', desc: 'Vendor Quotes' },
+      4: { date: 'Feb 25-26', desc: 'Negotiation' },
+      5: { date: 'Feb 27', desc: 'Recommendation' },
+      6: { date: 'Feb 27', desc: 'Approval' },
+      7: { date: 'Feb 28', desc: 'Confirmed' },
+      8: { date: 'Mar 15', desc: 'Scope Change' }
+    };
+
+    // Console content for each chapter
+    const consoleContent = {
+      1: `
+        <div class="console-section">
+          <div class="console-section-header">Incoming Request</div>
+          <div class="console-log">
+            <div class="log-line">
+              <span class="log-timestamp">09:14:23</span>
+              <span class="log-prefix info">[RECV]</span>
+              <span class="log-message">New email from dana@sunrisehomes.com</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:14:24</span>
+              <span class="log-prefix action">[PARSE]</span>
+              <span class="log-message">Processing attachments...
+                <ul class="log-details">
+                  <li>Coventry_Lane_Plans.pdf (24 pages)</li>
+                  <li>Materials_List.xlsx (127 line items)</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:15:01</span>
+              <span class="log-prefix action">[EXTRACT]</span>
+              <span class="log-message">Categorizing materials by phase:
+                <ul class="log-details">
+                  <li>Phase 1: Foundation (concrete, rebar, forms)</li>
+                  <li>Phase 2: Framing (lumber, sheathing, wrap)</li>
+                  <li>Phase 3: Rough openings (windows, doors)</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:15:12</span>
+              <span class="log-prefix info">[META]</span>
+              <span class="log-message">Location: Windham, NH 03087</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:15:12</span>
+              <span class="log-prefix info">[META]</span>
+              <span class="log-message">Deadline: March 10th (19 days)</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:16:00</span>
+              <span class="log-prefix action">[SEARCH]</span>
+              <span class="log-message">Searching vendors within 35mi radius...</span>
+            </div>
+          </div>
+        </div>
+        <div class="console-note">
+          <strong>Note:</strong> This is a log of background processing. Dana does not see any of this activity - she just receives Mack's email responses.
+        </div>
+      `,
+      2: `
+        <div class="console-section">
+          <div class="console-section-header">Vendor Discovery</div>
+          <div class="console-log">
+            <div class="log-line">
+              <span class="log-timestamp">09:18:00</span>
+              <span class="log-prefix success">[FOUND]</span>
+              <span class="log-message">9 vendors identified:</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp"></span>
+              <span class="log-prefix"></span>
+              <span class="log-message">
+                <ul class="log-details">
+                  <li><strong style="color: var(--console-blue);">Lumber:</strong> Granite Grove (8mi), Pinnacle Pine (12mi), Timber Trail (18mi), Concord Supply (31mi)</li>
+                  <li><strong style="color: var(--console-purple);">Foundation:</strong> Footing First (15mi), Bedrock Building (22mi)</li>
+                  <li><strong style="color: var(--console-green);">Windows:</strong> Pane & Panel (10mi), Clear Choice (28mi), Doorway Direct (19mi)</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:19:15</span>
+              <span class="log-prefix action">[SEND]</span>
+              <span class="log-message">Submitting quote requests to 9 vendors...</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:19:47</span>
+              <span class="log-prefix success">[DONE]</span>
+              <span class="log-message">All 9 quote requests sent</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:22:00</span>
+              <span class="log-prefix info">[SEND]</span>
+              <span class="log-message">Reply sent to dana@sunrisehomes.com</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:22:01</span>
+              <span class="log-prefix info">[WAIT]</span>
+              <span class="log-message">Monitoring inbox for vendor responses...</span>
+            </div>
+          </div>
+        </div>
+      `,
+      3: `
+        <div class="console-section">
+          <div class="console-section-header">Collecting Quotes (Day 2-4)</div>
+          <div class="console-log">
+            <div class="log-line">
+              <span class="log-timestamp">Feb 21</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message"><strong>Footing First:</strong> $6,975 total
+                <ul class="log-details">
+                  <li class="success">OK March 3rd delivery available</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">Feb 21</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message"><strong>Granite Grove:</strong> $38,750 total
+                <ul class="log-details">
+                  <li class="success">OK 5 day lead time</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">Feb 22</span>
+              <span class="log-prefix warning">[RECV]</span>
+              <span class="log-message"><strong>Pinnacle Pine:</strong> $42,290 total
+                <ul class="log-details">
+                  <li class="warning">! LVL beams backordered until Mar 18</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">Feb 23</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message"><strong>Pane & Panel:</strong> $9,730 total
+                <ul class="log-details">
+                  <li class="success">OK 10 day lead time</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">Feb 23</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message"><strong>Clear Choice:</strong> $10,730 total
+                <ul class="log-details">
+                  <li class="warning">! 2 week lead time (tight)</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">Feb 24</span>
+              <span class="log-prefix info">[STATUS]</span>
+              <span class="log-message">8 of 9 vendors responded
+                <ul class="log-details">
+                  <li>Doorway Direct: no response</li>
+                </ul>
+              </span>
+            </div>
+          </div>
+        </div>
+      `,
+      4: `
+        <div class="console-section">
+          <div class="console-section-header">Quote Analysis & Negotiation</div>
+          <div class="console-log">
+            <div class="log-line">
+              <span class="log-timestamp">Feb 25</span>
+              <span class="log-prefix action">[ANALYZE]</span>
+              <span class="log-message">Comparing framing quotes:</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp"></span>
+              <span class="log-prefix"></span>
+              <span class="log-message" style="font-size: 11px;">
+                <table style="width: 100%; margin: 8px 0;">
+                  <tr style="color: var(--console-muted);">
+                    <td>Vendor</td><td>Total</td><td>Delivery</td><td>Lead</td>
+                  </tr>
+                  <tr>
+                    <td>Granite Grove</td>
+                    <td style="color: var(--console-green);">$38,400</td>
+                    <td>$350</td>
+                    <td style="color: var(--console-green);">5d OK</td>
+                  </tr>
+                  <tr>
+                    <td>Timber Trail</td>
+                    <td>$39,200</td>
+                    <td style="color: var(--console-green);">$0</td>
+                    <td>7d OK</td>
+                  </tr>
+                  <tr>
+                    <td>Pinnacle</td>
+                    <td>$41,890</td>
+                    <td>$400</td>
+                    <td style="color: var(--console-yellow);">!</td>
+                  </tr>
+                </table>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">Feb 25</span>
+              <span class="log-prefix info">[OPPORTUNITY]</span>
+              <span class="log-message">Granite has best price but charges delivery. Timber offers free delivery. Leverage opportunity identified.</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">Feb 25</span>
+              <span class="log-prefix action">[SEND]</span>
+              <span class="log-message">Negotiation email sent to Granite Grove</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">Feb 26</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message"><strong>Negotiation successful:</strong>
+                <ul class="log-details">
+                  <li class="success">Delivery: $350 <' $0</li>
+                  <li class="success">Bonus: Net-30 contractor account</li>
+                </ul>
+              </span>
+            </div>
+          </div>
+        </div>
+      `,
+      5: `
+        <div class="console-section">
+          <div class="console-section-header">Compiling Recommendation</div>
+          <div class="console-log">
+            <div class="log-line">
+              <span class="log-timestamp">09:45:00</span>
+              <span class="log-prefix action">[BUILD]</span>
+              <span class="log-message">Selecting optimal vendor combination:
+                <ul class="log-details">
+                  <li>Foundation: Footing First ($6,975)</li>
+                  <li>Framing: Granite Grove ($38,400)</li>
+                  <li>Windows: Pane & Panel ($9,730)</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:50:00</span>
+              <span class="log-prefix action">[CALC]</span>
+              <span class="log-message">Total: $55,105
+                <ul class="log-details">
+                  <li class="success">~$4,200 savings vs next-best combination</li>
+                  <li class="success">All vendors meet March 10 deadline</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:55:00</span>
+              <span class="log-prefix action">[GEN]</span>
+              <span class="log-message">Generated comparison spreadsheet (8 vendors, timeline analysis)</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">10:00:00</span>
+              <span class="log-prefix success">[SEND]</span>
+              <span class="log-message">Recommendation sent to dana@sunrisehomes.com</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">10:00:01</span>
+              <span class="log-prefix info">[WAIT]</span>
+              <span class="log-message">Awaiting approval...</span>
+            </div>
+          </div>
+        </div>
+      `,
+      6: `
+        <div class="console-section">
+          <div class="console-section-header">Processing Approval</div>
+          <div class="console-log">
+            <div class="log-line">
+              <span class="log-timestamp">10:45:00</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message">Approval received from Dana</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">10:46:00</span>
+              <span class="log-prefix action">[PROC]</span>
+              <span class="log-message">Generating order confirmations for 3 vendors...</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">10:52:00</span>
+              <span class="log-prefix success">[SEND]</span>
+              <span class="log-message">Order confirmation <' Footing First</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">10:53:00</span>
+              <span class="log-prefix success">[SEND]</span>
+              <span class="log-message">Order confirmation <' Granite Grove</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">10:54:00</span>
+              <span class="log-prefix success">[SEND]</span>
+              <span class="log-message">Order confirmation <' Pane & Panel</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">10:55:00</span>
+              <span class="log-prefix info">[WAIT]</span>
+              <span class="log-message">Awaiting invoice confirmations...</span>
+            </div>
+          </div>
+        </div>
+      `,
+      7: `
+        <div class="console-section">
+          <div class="console-section-header">Invoice Collection</div>
+          <div class="console-log">
+            <div class="log-line">
+              <span class="log-timestamp">08:30:00</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message"><strong>Invoice: Footing First</strong>
+                <ul class="log-details">
+                  <li>#FF-2024-0892 - $6,975</li>
+                  <li class="success">Delivery: Mar 3, 8am-12pm OK</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:45:00</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message"><strong>Invoice: Granite Grove</strong>
+                <ul class="log-details">
+                  <li>#GG-41205 - $38,400</li>
+                  <li class="success">Delivery: Mar 6 OK</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">10:20:00</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message"><strong>Invoice: Pane & Panel</strong>
+                <ul class="log-details">
+                  <li>#PP-8847 - $9,730</li>
+                  <li class="success">Delivery: Mar 8 OK</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">11:15:00</span>
+              <span class="log-prefix success">[COMPLETE]</span>
+              <span class="log-message" style="color: var(--console-green);"><strong>Phase 1 Complete</strong>
+                <ul class="log-details">
+                  <li>3 vendors confirmed</li>
+                  <li>$55,105 total committed</li>
+                  <li>All deliveries before March 10 deadline</li>
+                </ul>
+              </span>
+            </div>
+          </div>
+        </div>
+      `,
+      8: `
+        <div class="console-section">
+          <div class="console-section-header">Scope Change: Sunroom Addition</div>
+          <div class="console-log">
+            <div class="log-line">
+              <span class="log-timestamp">09:30:00</span>
+              <span class="log-prefix info">[RECV]</span>
+              <span class="log-message">Scope change request from Dana
+                <ul class="log-details">
+                  <li>12x16 sunroom addition</li>
+                  <li>Additional framing + 6 windows needed</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">09:31:00</span>
+              <span class="log-prefix action">[STRATEGY]</span>
+              <span class="log-message">Leveraging existing vendor relationships:
+                <ul class="log-details">
+                  <li class="success">Granite Grove: Net-30 account active</li>
+                  <li class="success">Pane & Panel: Previous order on file</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">Mar 16</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message"><strong>Granite Grove:</strong> $2,600
+                <ul class="log-details">
+                  <li class="success">Free delivery (existing customer)</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">Mar 16</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message"><strong>Pane & Panel:</strong>
+                <ul class="log-details">
+                  <li>Standard casement: $3,240</li>
+                  <li>Triple-pane upgrade: $4,380</li>
+                </ul>
+              </span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">15:15:00</span>
+              <span class="log-prefix success">[RECV]</span>
+              <span class="log-message">Dana approved triple-pane option</span>
+            </div>
+            <div class="log-line">
+              <span class="log-timestamp">15:18:00</span>
+              <span class="log-prefix success">[COMPLETE]</span>
+              <span class="log-message" style="color: var(--console-green);"><strong>Add-on Confirmed</strong>
+                <ul class="log-details">
+                  <li>Framing: $2,600</li>
+                  <li>Windows (triple): $4,380</li>
+                  <li>Total add-on: $6,980</li>
+                </ul>
+              </span>
+            </div>
+          </div>
+        </div>
+      `
+    };
+
+    // Hide all email views
+    function hideAllViews() {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    }
+
+    // Show specific view
+    function showView(viewId) {
+      hideAllViews();
+      const view = document.getElementById(viewId);
+      if (view) view.classList.add('active');
+    }
+
+    // Update chapter info
+    function updateChapterInfo() {
+      document.getElementById('chapterDate').textContent = chapters[currentChapter].date;
+      document.getElementById('chapterDesc').textContent = chapters[currentChapter].desc;
+      
+      // Update dots
+      document.querySelectorAll('.chapter-dot').forEach((dot, i) => {
+        dot.classList.remove('active', 'completed');
+        if (i + 1 < currentChapter) dot.classList.add('completed');
+        if (i + 1 === currentChapter) dot.classList.add('active');
+      });
+
+      // Update nav buttons
+      document.getElementById('prevBtn').disabled = currentChapter === 1;
+      document.getElementById('nextBtn').disabled = currentChapter === 8;
+      document.getElementById('nextBtn').textContent = currentChapter === 8 ? 'End' : 'Next →';
+    }
+
+    // Update console content
+    function updateConsole() {
+      document.getElementById('consoleBody').innerHTML = consoleContent[currentChapter] || '';
+    }
+
+    // Switch between inbox and console tabs
+    function switchTab(tab) {
+      currentViewTab = tab;
+      
+      document.getElementById('tabInbox').classList.toggle('active', tab === 'inbox');
+      document.getElementById('tabConsole').classList.toggle('active', tab === 'console');
+      
+      document.getElementById('phoneFrame').classList.toggle('active', tab === 'inbox');
+      document.getElementById('consoleContainer').classList.toggle('active', tab === 'console');
+    }
+
+    // Go to chapter
+    function goToChapter(num) {
+      currentChapter = num;
+      emailSent = false;
+      
+      // Hide snackbar
+      document.getElementById('sentSnackbar').classList.remove('show');
+      
+      // Show appropriate email view
+      if (num === 1) {
+        showView('ch1-compose');
+      } else {
+        showView(`ch${num}-thread`);
+      }
+      
+      updateChapterInfo();
+      updateConsole();
+    }
+
+    // Event listeners
+    document.getElementById('tabInbox').addEventListener('click', () => switchTab('inbox'));
+    document.getElementById('tabConsole').addEventListener('click', () => switchTab('console'));
+
+    // Chapter 1: Send button
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      if (!emailSent) {
+        emailSent = true;
+        document.getElementById('sentSnackbar').classList.add('show');
+      }
+    });
+
+    // Chapter 1: View activity button
+    document.getElementById('viewActivityBtn').addEventListener('click', () => {
+      document.getElementById('sentSnackbar').classList.remove('show');
+      switchTab('console');
+    });
+
+    // Chapter dots
+    document.querySelectorAll('.chapter-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        goToChapter(parseInt(dot.dataset.chapter));
+      });
+    });
+
+    // Prev/Next buttons
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentChapter > 1) goToChapter(currentChapter - 1);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentChapter < 8) goToChapter(currentChapter + 1);
+    });
+
+    // Initialize
+    updateChapterInfo();
+    updateConsole();
+  </script>
+</body>
+</html>
