@@ -48,14 +48,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 10px;
+      padding: 10px 10px;
     }
 
-    /* Page header */
+    /* Page header - hidden on mobile */
     .page-header {
-      text-align: center;
-      margin-bottom: 16px;
-      max-width: 375px;
+      display: none;
     }
 
     .page-header h1 {
@@ -71,14 +69,51 @@
       color: var(--text-secondary);
     }
 
+    /* Combined navigation row with prev/next on sides */
+    .nav-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      max-width: 355px;
+      width: 100%;
+    }
+
+    .nav-arrow {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .nav-arrow:hover:not(:disabled) {
+      background: var(--bg-secondary);
+      border-color: var(--gmail-blue);
+      color: var(--gmail-blue);
+    }
+
+    .nav-arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
     /* Chapter navigation */
     .chapter-nav {
       display: flex;
-      gap: 6px;
-      margin-bottom: 12px;
-      max-width: 375px;
+      gap: 4px;
+      flex: 1;
+      justify-content: center;
       overflow-x: auto;
-      padding: 4px 0;
+      padding: 2px 0;
       scrollbar-width: none;
     }
 
@@ -87,15 +122,15 @@
     }
 
     .chapter-dot {
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background: var(--bg-primary);
       border: 2px solid var(--border-light);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 10px;
       font-weight: 500;
       color: var(--text-secondary);
       cursor: pointer;
@@ -125,22 +160,22 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 8px 16px;
+      gap: 6px;
+      padding: 4px 12px;
       background: var(--bg-secondary);
-      border-radius: 20px;
-      margin: 0 auto 12px;
+      border-radius: 12px;
+      margin: 0 auto 8px;
       max-width: fit-content;
     }
 
     .chapter-info-date {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 500;
       color: var(--gmail-blue);
     }
 
     .chapter-info-desc {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-secondary);
     }
 
@@ -148,22 +183,22 @@
     .view-tabs {
       display: flex;
       background: var(--bg-primary);
-      border-radius: 8px;
-      padding: 4px;
-      margin-bottom: 16px;
+      border-radius: 6px;
+      padding: 3px;
+      margin-bottom: 8px;
       box-shadow: var(--shadow-sm);
-      max-width: 375px;
+      max-width: 355px;
       width: 100%;
     }
 
     .view-tab {
       flex: 1;
-      padding: 10px 16px;
+      padding: 6px 12px;
       border: none;
       background: none;
-      border-radius: 6px;
+      border-radius: 4px;
       font-family: 'Google Sans', sans-serif;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 500;
       color: var(--text-secondary);
       cursor: pointer;
@@ -171,7 +206,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .view-tab:hover {
@@ -184,21 +219,21 @@
     }
 
     .view-tab-icon {
-      font-size: 16px;
+      font-size: 14px;
     }
 
     /* Main content area */
     .main-content {
-      width: 375px;
+      width: 355px;
     }
 
     /* Phone frame */
     .phone-frame {
-      width: 375px;
-      height: 700px;
+      width: 355px;
+      height: 520px;
       background: var(--bg-primary);
-      border-radius: 40px;
-      box-shadow: var(--shadow-lg), 0 0 0 12px #1a1a1a;
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg), 0 0 0 6px #1a1a1a;
       overflow: hidden;
       position: relative;
       display: none;
@@ -210,13 +245,13 @@
 
     /* Status bar */
     .status-bar {
-      height: 44px;
+      height: 32px;
       background: var(--bg-primary);
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      padding: 0 24px 8px;
-      font-size: 14px;
+      padding: 0 16px 4px;
+      font-size: 12px;
       font-weight: 500;
     }
 
@@ -233,7 +268,7 @@
 
     /* Screen container */
     .screen {
-      height: calc(100% - 44px);
+      height: calc(100% - 32px);
       overflow: hidden;
       position: relative;
     }
@@ -655,7 +690,9 @@
 
     /* ========== CONSOLE / BACKSTAGE ========== */
     .console-container {
-      width: 375px;
+      width: 355px;
+      max-height: 520px;
+      overflow-y: auto;
       display: none;
     }
 
@@ -798,43 +835,13 @@
       color: var(--console-text);
     }
 
-    /* Navigation footer */
+    /* Navigation footer - hidden, using nav-row instead */
     .nav-footer {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-      max-width: 375px;
-      width: 100%;
+      display: none;
     }
 
     .nav-btn {
-      flex: 1;
-      padding: 12px 16px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-light);
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-primary);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .nav-btn:hover {
-      background: var(--bg-secondary);
-      border-color: var(--gmail-blue);
-      color: var(--gmail-blue);
-    }
-
-    .nav-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .nav-btn:disabled:hover {
-      background: var(--bg-primary);
-      border-color: var(--border-light);
-      color: var(--text-primary);
+      display: none;
     }
   </style>
 </head>
@@ -844,16 +851,20 @@
     <p>Coventry Lane Project - Sunrise Homes</p>
   </div>
 
-  <!-- Chapter dots -->
-  <div class="chapter-nav">
-    <div class="chapter-dot active" data-chapter="1">1</div>
-    <div class="chapter-dot" data-chapter="2">2</div>
-    <div class="chapter-dot" data-chapter="3">3</div>
-    <div class="chapter-dot" data-chapter="4">4</div>
-    <div class="chapter-dot" data-chapter="5">5</div>
-    <div class="chapter-dot" data-chapter="6">6</div>
-    <div class="chapter-dot" data-chapter="7">7</div>
-    <div class="chapter-dot" data-chapter="8">8</div>
+  <!-- Navigation row with arrows and chapter dots -->
+  <div class="nav-row">
+    <button class="nav-arrow" id="prevBtn" disabled>&#8592;</button>
+    <div class="chapter-nav">
+      <div class="chapter-dot active" data-chapter="1">1</div>
+      <div class="chapter-dot" data-chapter="2">2</div>
+      <div class="chapter-dot" data-chapter="3">3</div>
+      <div class="chapter-dot" data-chapter="4">4</div>
+      <div class="chapter-dot" data-chapter="5">5</div>
+      <div class="chapter-dot" data-chapter="6">6</div>
+      <div class="chapter-dot" data-chapter="7">7</div>
+      <div class="chapter-dot" data-chapter="8">8</div>
+    </div>
+    <button class="nav-arrow" id="nextBtn">&#8594;</button>
   </div>
 
   <!-- Chapter info -->
@@ -1590,11 +1601,6 @@ Dana</div>
 
   </div>
 
-  <!-- Navigation footer -->
-  <div class="nav-footer">
-    <button class="nav-btn" id="prevBtn" disabled>&#8592; Previous</button>
-    <button class="nav-btn" id="nextBtn">Next →</button>
-  </div>
 
   <script>
     // State
@@ -2048,10 +2054,9 @@ Dana</div>
         if (i + 1 === currentChapter) dot.classList.add('active');
       });
 
-      // Update nav buttons
+      // Update nav arrows
       document.getElementById('prevBtn').disabled = currentChapter === 1;
       document.getElementById('nextBtn').disabled = currentChapter === 8;
-      document.getElementById('nextBtn').textContent = currentChapter === 8 ? 'End' : 'Next →';
     }
 
     // Update console content
