@@ -32,21 +32,15 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       min-height: 100vh;
-      color: var(--text-primary);
-      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 10px;
     }
 
-    .container {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 16px;
-      padding-bottom: 100px;
-    }
-
-    /* Header */
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
+    /* Page header - hidden on mobile */
+    .page-header {
+      display: none;
     }
 
     .header-title {
@@ -61,13 +55,84 @@
       margin-top: 2px;
     }
 
-    /* Progress indicator */
-    .progress {
+    /* Combined navigation row with prev/next on sides */
+    .nav-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      max-width: 355px;
+      width: 100%;
+    }
+
+    .nav-arrow {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      margin-bottom: 20px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .nav-arrow:hover:not(:disabled) {
+      background: var(--bg-secondary);
+      border-color: var(--gmail-blue);
+      color: var(--gmail-blue);
+    }
+
+    .nav-arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Chapter navigation */
+    .chapter-nav {
+      display: flex;
+      gap: 4px;
+      flex: 1;
+      justify-content: center;
+      overflow-x: auto;
+      padding: 2px 0;
+      scrollbar-width: none;
+    }
+
+    .chapter-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chapter-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .chapter-dot:hover {
+      border-color: var(--gmail-blue);
+      color: var(--gmail-blue);
+    }
+
+    .chapter-dot.active {
+      background: var(--gmail-blue);
+      border-color: var(--gmail-blue);
+      color: white;
     }
 
     .progress-step {
@@ -78,25 +143,87 @@
       transition: all 0.3s;
     }
 
-    .progress-step.active {
-      background: var(--blue);
-      width: 24px;
+    /* Chapter info pill */
+    .chapter-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      margin: 0 auto 8px;
+      max-width: fit-content;
+    }
+
+    .chapter-info-date {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gmail-blue);
+    }
+
+    .chapter-info-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* View toggle tabs - outside phone */
+    .view-tabs {
+      display: flex;
+      background: var(--bg-primary);
+      border-radius: 6px;
+      padding: 3px;
+      margin-bottom: 8px;
+      box-shadow: var(--shadow-sm);
+      max-width: 355px;
+      width: 100%;
+    }
+
+    .view-tab {
+      flex: 1;
+      padding: 6px 12px;
+      border: none;
+      background: none;
       border-radius: 4px;
-    }
-
-    .progress-step.completed {
-      background: var(--green);
-    }
-
-    .step-label {
+      font-family: 'Google Sans', sans-serif;
       font-size: 12px;
-      color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 16px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
-    /* Step containers */
-    .step {
+    .view-tab:hover {
+      color: var(--text-primary);
+    }
+
+    .view-tab.active {
+      background: var(--gmail-blue);
+      color: white;
+    }
+
+    .view-tab-icon {
+      font-size: 14px;
+    }
+
+    /* Main content area */
+    .main-content {
+      width: 355px;
+    }
+
+    /* Phone frame */
+    .phone-frame {
+      width: 355px;
+      height: 520px;
+      background: var(--bg-primary);
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg), 0 0 0 6px #1a1a1a;
+      overflow: hidden;
+      position: relative;
       display: none;
     }
 
@@ -105,17 +232,32 @@
       animation: fadeIn 0.3s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Status bar */
+    .status-bar {
+      height: 32px;
+      background: var(--bg-primary);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 16px 4px;
+      font-size: 12px;
+      font-weight: 500;
     }
 
-    /* Email card */
-    .email-card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      margin-bottom: 16px;
+    .status-bar-time {
+      color: var(--text-primary);
+    }
+
+    .status-bar-icons {
+      display: flex;
+      gap: 4px;
+      color: var(--text-primary);
+      font-size: 12px;
+    }
+
+    /* Screen container */
+    .screen {
+      height: calc(100% - 32px);
       overflow: hidden;
     }
 
@@ -427,11 +569,11 @@
       color: var(--green);
     }
 
-    /* Sunroom bonus section */
-    .bonus-section {
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px dashed var(--border);
+    /* ========== CONSOLE / BACKSTAGE ========== */
+    .console-container {
+      width: 355px;
+      max-height: 520px;
+      overflow-y: auto;
       display: none;
     }
 
@@ -484,38 +626,93 @@
       padding: 12px;
     }
 
-    .email-card.compact .email-avatar {
-      width: 32px;
-      height: 32px;
-      font-size: 13px;
+    /* Navigation footer - hidden, using nav-row instead */
+    .nav-footer {
+      display: none;
     }
 
-    .email-card.compact .email-from-name {
-      font-size: 14px;
-    }
-
-    .email-card.compact .email-subject {
-      padding: 10px 12px;
-      font-size: 14px;
-    }
-
-    .email-card.compact .email-body {
-      padding: 12px;
-      font-size: 13px;
-    }
-
-    .email-card.compact .attachments {
-      padding: 10px 12px;
+    .nav-btn {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <div class="header-title">Mack Demo</div>
-      <div class="header-subtitle">Coventry Lane Project</div>
+  <div class="page-header">
+    <h1>Mack Procurement Agent</h1>
+    <p>Coventry Lane Project - Sunrise Homes</p>
+  </div>
+
+  <!-- Navigation row with arrows and chapter dots -->
+  <div class="nav-row">
+    <button class="nav-arrow" id="prevBtn" disabled>&#8592;</button>
+    <div class="chapter-nav">
+      <div class="chapter-dot active" data-chapter="1">1</div>
+      <div class="chapter-dot" data-chapter="2">2</div>
+      <div class="chapter-dot" data-chapter="3">3</div>
+      <div class="chapter-dot" data-chapter="4">4</div>
+      <div class="chapter-dot" data-chapter="5">5</div>
+      <div class="chapter-dot" data-chapter="6">6</div>
+      <div class="chapter-dot" data-chapter="7">7</div>
+      <div class="chapter-dot" data-chapter="8">8</div>
     </div>
+    <button class="nav-arrow" id="nextBtn">&#8594;</button>
+  </div>
+
+  <!-- Chapter info -->
+  <div class="chapter-info">
+    <span class="chapter-info-date" id="chapterDate">Feb 20</span>
+    <span class="chapter-info-desc" id="chapterDesc">Initial Request</span>
+  </div>
+
+  <!-- View toggle tabs -->
+  <div class="view-tabs">
+    <button class="view-tab active" id="tabInbox">
+      <span class="view-tab-icon">&#9993;</span>
+      Dana's Inbox
+    </button>
+    <button class="view-tab" id="tabConsole">
+      <span class="view-tab-icon">&#9881;</span>
+      Background Activity
+    </button>
+  </div>
+
+  <!-- Main content area -->
+  <div class="main-content">
+    
+    <!-- ==================== PHONE FRAME ==================== -->
+    <div class="phone-frame active" id="phoneFrame">
+      <div class="status-bar">
+        <span class="status-bar-time">9:14</span>
+        <span class="status-bar-icons"></span>
+      </div>
+
+      <div class="screen">
+        <!-- Chapter 1: Compose -->
+        <div class="view active" id="ch1-compose">
+          <div class="compose-header">
+            <button class="compose-header-btn">&times;</button>
+            <span class="compose-header-title">Compose</span>
+            <button class="compose-header-btn">&#128206;</button>
+            <button class="compose-header-btn">&#8942;</button>
+            <button class="compose-send-btn" id="sendBtn">&#10148;</button>
+          </div>
+          <div class="compose-form">
+            <div class="compose-field">
+              <span class="compose-label">From</span>
+              <span class="compose-value">dana@sunrisehomes.com</span>
+            </div>
+            <div class="compose-field">
+              <span class="compose-label">To</span>
+              <span class="compose-value">mack@procurement.ai</span>
+            </div>
+            <div class="compose-field">
+              <span class="compose-subject">New project - 42 Coventry Lane, Windham NH</span>
+            </div>
+            <div class="compose-body">Hey Mack,
+
+Got the final plans for our Coventry Lane build. Single family, 2,400 sq ft, standard foundation with 2-car garage.
+
+Specs and materials list attached. Ground breaks March 15th, so I need foundation and framing materials delivered by March 10th.
 
     <!-- Progress indicator -->
     <div class="progress">
@@ -836,15 +1033,6 @@ Dana</div>
     </div>
   </div>
 
-  <!-- Navigation footer -->
-  <div class="nav-footer">
-    <button class="nav-btn secondary" id="prevBtn" style="visibility: hidden;">
-      <span>←</span> Back
-    </button>
-    <button class="nav-btn primary" id="nextBtn">
-      Next <span>→</span>
-    </button>
-  </div>
 
   <!-- Snackbar -->
   <div class="snackbar" id="snackbar">
@@ -870,16 +1058,38 @@ Dana</div>
         if (i + 1 === currentStep) dot.classList.add('active');
       });
 
-      // Update nav buttons
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
+      // Update nav arrows
+      document.getElementById('prevBtn').disabled = currentChapter === 1;
+      document.getElementById('nextBtn').disabled = currentChapter === 8;
+    }
 
-      prevBtn.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+    // Update console content
+    function updateConsole() {
+      document.getElementById('consoleBody').innerHTML = consoleContent[currentChapter] || '';
+    }
 
-      if (currentStep === 1 && !step1Sent) {
-        nextBtn.innerHTML = 'Send <span>→</span>';
-      } else if (currentStep === totalSteps) {
-        nextBtn.innerHTML = 'Done <span>✓</span>';
+    // Switch between inbox and console tabs
+    function switchTab(tab) {
+      currentViewTab = tab;
+      
+      document.getElementById('tabInbox').classList.toggle('active', tab === 'inbox');
+      document.getElementById('tabConsole').classList.toggle('active', tab === 'console');
+      
+      document.getElementById('phoneFrame').classList.toggle('active', tab === 'inbox');
+      document.getElementById('consoleContainer').classList.toggle('active', tab === 'console');
+    }
+
+    // Go to chapter
+    function goToChapter(num) {
+      currentChapter = num;
+      emailSent = false;
+      
+      // Hide snackbar
+      document.getElementById('sentSnackbar').classList.remove('show');
+      
+      // Show appropriate email view
+      if (num === 1) {
+        showView('ch1-compose');
       } else {
         nextBtn.innerHTML = 'Next <span>→</span>';
       }
